@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AR Business Card</title>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image-three.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/build/three.min.js"></script>
+  <style>
+    html, body {{ margin: 0; overflow: hidden; height: 100%; }}
+    #ar-container {{ width: 100vw; height: 100vh; }}
+  </style>
+</head>
+<body>
+  <div id="ar-container"></div>
+  <script type="module">
+    import {{ MindARThree }} from 'https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image-three.prod.js';
+
+    const start = async () => {{
+      const mindarThree = new MindARThree({{
+        container: document.querySelector("#ar-container"),
+        imageTargetSrc: "./targets.mind",
+      }});
+      const { renderer, scene, camera } = mindarThree;
+
+      const anchor = mindarThree.addAnchor(0);
+
+      const textureLoader = new THREE.TextureLoader();
+      const texture = textureLoader.load("animation.gif");
+      const material = new THREE.MeshBasicMaterial({{ map: texture, transparent: true }});
+      const geometry = new THREE.PlaneGeometry(1, 0.6);
+      const plane = new THREE.Mesh(geometry, material);
+      anchor.group.add(plane);
+
+      await mindarThree.start();
+      renderer.setAnimationLoop(() => {{
+        renderer.render(scene, camera);
+      }});
+    }};
+    start();
+  </script>
+</body>
+</html>
